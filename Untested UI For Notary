@@ -1,0 +1,335 @@
+import React, { useState, useEffect } from 'react';
+import { 
+  ShieldCheck, 
+  RefreshCcw, 
+  Link, 
+  Key, 
+  FileText, 
+  Server, 
+  Zap, 
+  Lock,
+  Users,
+  CheckCircle,
+  Activity
+} from 'lucide-react';
+
+const QuantumNotaryDashboard = () => {
+  // App State: 'draft', 'agreed', 'executing', 'finalized'
+  const [phase, setPhase] = useState('draft');
+  
+  // User Actions
+  const [bankKeySent, setBankKeySent] = useState(false);
+  const [clientKeySent, setClientKeySent] = useState(false);
+  
+  // Simulation Metrics (Visuals only)
+  const [fidelity, setFidelity] = useState(100);
+  const [entanglement, setEntanglement] = useState(0);
+  const [serverState, setServerState] = useState(0);
+  
+  // Reset Protocol
+  const resetProtocol = () => {
+    setPhase('draft');
+    setBankKeySent(false);
+    setClientKeySent(false);
+    setEntanglement(0);
+    setServerState(0);
+  };
+
+  // Phase 1: Time Rollback Simulation
+  const handleRollback = () => {
+    // Visually simulate the "undo" 
+    setPhase('rollback_anim');
+    setTimeout(() => {
+      setPhase('draft');
+      alert("Quantum State Reversed: Contract draft returned to null state.");
+    }, 1000);
+  };
+
+  // Phase 2: Entanglement
+  const establishEntanglement = () => {
+    setPhase('agreed');
+    setEntanglement(100); // Correlated
+  };
+
+  // Phase 3: Teleportation Logic
+  const sendBankKey = () => {
+    setBankKeySent(true);
+    checkFinalization(true, clientKeySent);
+  };
+
+  const sendClientKey = () => {
+    setClientKeySent(true);
+    checkFinalization(bankKeySent, true);
+  };
+
+  // Phase 4: Schrödinger's Server (The Toffoli Gate)
+  const checkFinalization = (bank, client) => {
+    if (bank && client) {
+      setTimeout(() => {
+        setPhase('finalized');
+        setServerState(1);
+      }, 1500); // Delay for dramatic effect
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-slate-900 text-slate-100 font-sans selection:bg-cyan-500 selection:text-white">
+      
+      {/* Header */}
+      <header className="border-b border-slate-700 bg-slate-800/50 backdrop-blur-md sticky top-0 z-10">
+        <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+          <div className="flex items-center space-x-3">
+            <div className="p-2 bg-cyan-500 rounded-lg shadow-[0_0_15px_rgba(6,182,212,0.5)]">
+              <ShieldCheck className="w-6 h-6 text-white" />
+            </div>
+            <div>
+              <h1 className="text-xl font-bold tracking-wider">QUANTUM NOTARY</h1>
+              <p className="text-xs text-cyan-400 font-mono">PROTOCOL: Q-TOFFOLI-V1</p>
+            </div>
+          </div>
+          <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-2 px-3 py-1 rounded-full bg-slate-700/50 border border-slate-600">
+              <Activity className={`w-4 h-4 ${phase === 'finalized' ? 'text-green-400' : 'text-cyan-400'}`} />
+              <span className="text-xs font-mono">
+                STATUS: {phase === 'draft' ? 'DRAFTING (REVERSIBLE)' : 
+                         phase === 'agreed' ? 'ENTANGLED (LOCKED)' : 
+                         phase === 'finalized' ? 'IMMUTABLE' : 'PROCESSING'}
+              </span>
+            </div>
+            <button 
+              onClick={resetProtocol}
+              className="p-2 hover:bg-slate-700 rounded-full transition-colors"
+              title="Reset Protocol"
+            >
+              <RefreshCcw className="w-5 h-5 text-slate-400" />
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <main className="max-w-7xl mx-auto px-4 py-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
+        
+        {/* LEFT COLUMN: BANK PORTAL */}
+        <div className="space-y-6">
+          <div className="bg-slate-800/50 border border-slate-700 rounded-xl p-6 relative overflow-hidden group">
+            <div className="absolute top-0 left-0 w-1 h-full bg-blue-500"></div>
+            <h2 className="text-lg font-bold flex items-center space-x-2 mb-4 text-blue-400">
+              <Server className="w-5 h-5" />
+              <span>BANK PORTAL</span>
+            </h2>
+            
+            <div className="space-y-4">
+              <div className="p-4 bg-slate-900 rounded-lg border border-slate-700">
+                <h3 className="text-sm font-semibold text-slate-400 mb-2">Contract Parameters</h3>
+                <div className="space-y-2 text-xs font-mono text-slate-300">
+                  <div className="flex justify-between"><span>Principal:</span> <span>$5,000,000</span></div>
+                  <div className="flex justify-between"><span>Interest:</span> <span>4.5% APR</span></div>
+                  <div className="flex justify-between"><span>Maturity:</span> <span>12/2030</span></div>
+                </div>
+              </div>
+
+              {phase === 'draft' && (
+                <div className="grid grid-cols-2 gap-3">
+                  <button className="py-3 px-4 bg-blue-600 hover:bg-blue-500 rounded-lg text-sm font-bold transition-all shadow-[0_0_10px_rgba(37,99,235,0.3)]">
+                    EDIT DRAFT
+                  </button>
+                  <button 
+                    onClick={handleRollback}
+                    className="py-3 px-4 bg-slate-700 hover:bg-slate-600 border border-slate-600 rounded-lg text-sm font-bold transition-all flex items-center justify-center space-x-2"
+                  >
+                    <RefreshCcw className="w-4 h-4" />
+                    <span>ROLLBACK</span>
+                  </button>
+                </div>
+              )}
+
+              {phase === 'draft' && (
+                <button 
+                  onClick={establishEntanglement}
+                  className="w-full py-4 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 rounded-lg text-sm font-bold transition-all shadow-lg flex items-center justify-center space-x-2"
+                >
+                  <Link className="w-4 h-4" />
+                  <span>INITIATE ENTANGLEMENT</span>
+                </button>
+              )}
+
+              {phase !== 'draft' && !bankKeySent && (
+                <button 
+                  onClick={sendBankKey}
+                  className="w-full py-4 bg-blue-600 hover:bg-blue-500 rounded-lg text-sm font-bold transition-all shadow-[0_0_15px_rgba(37,99,235,0.4)] flex items-center justify-center space-x-2"
+                >
+                  <Zap className="w-4 h-4" />
+                  <span>TELEPORT AUTHORIZATION KEY</span>
+                </button>
+              )}
+
+              {bankKeySent && (
+                <div className="w-full py-4 bg-slate-900/50 border border-green-500/30 text-green-400 rounded-lg text-sm font-bold flex items-center justify-center space-x-2">
+                  <CheckCircle className="w-4 h-4" />
+                  <span>KEY TELEPORTED</span>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* CENTER COLUMN: QUANTUM CORE VISUALIZER */}
+        <div className="lg:col-span-1 flex flex-col space-y-6">
+          
+          {/* The Black Box / Server */}
+          <div className="flex-1 bg-black border border-slate-800 rounded-2xl p-6 relative shadow-2xl flex flex-col items-center justify-center overflow-hidden">
+            
+            {/* Background Grid Animation */}
+            <div className="absolute inset-0 opacity-20" 
+                 style={{backgroundImage: 'linear-gradient(rgba(6,182,212,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(6,182,212,0.1) 1px, transparent 1px)', backgroundSize: '20px 20px'}}>
+            </div>
+
+            {/* Dynamic Status Text */}
+            <div className="absolute top-4 text-center w-full">
+               <h3 className="text-slate-400 text-xs tracking-[0.2em]">SCHRÖDINGER'S SERVER STATE</h3>
+            </div>
+
+            {/* Visualizer Core */}
+            <div className="relative z-10 flex flex-col items-center">
+              
+              {/* The Gate */}
+              <div className={`w-32 h-32 rounded-full flex items-center justify-center transition-all duration-1000 border-2 
+                ${phase === 'finalized' ? 'bg-green-500/10 border-green-500 shadow-[0_0_50px_rgba(34,197,94,0.4)]' : 
+                  phase === 'agreed' ? 'bg-cyan-900/20 border-cyan-500 shadow-[0_0_30px_rgba(6,182,212,0.2)]' : 
+                  'bg-slate-800 border-slate-700'}`}>
+                
+                {phase === 'finalized' ? (
+                  <FileText className="w-12 h-12 text-green-400 animate-pulse" />
+                ) : (
+                  <Lock className={`w-10 h-10 transition-colors ${phase === 'agreed' || bankKeySent || clientKeySent ? 'text-cyan-400' : 'text-slate-600'}`} />
+                )}
+              </div>
+
+              {/* Connection Lines */}
+              <div className="flex justify-center w-64 mt-8 space-x-12 relative">
+                {/* Bank Line */}
+                <div className="flex flex-col items-center space-y-2">
+                   <div className={`w-0.5 h-8 ${bankKeySent ? 'bg-blue-500 shadow-[0_0_10px_#3b82f6]' : 'bg-slate-700'} transition-all duration-500`}></div>
+                   <div className={`text-[10px] font-mono ${bankKeySent ? 'text-blue-400' : 'text-slate-600'}`}>BANK KEY</div>
+                </div>
+                
+                {/* Client Line */}
+                <div className="flex flex-col items-center space-y-2">
+                   <div className={`w-0.5 h-8 ${clientKeySent ? 'bg-purple-500 shadow-[0_0_10px_#a855f7]' : 'bg-slate-700'} transition-all duration-500`}></div>
+                   <div className={`text-[10px] font-mono ${clientKeySent ? 'text-purple-400' : 'text-slate-600'}`}>CLIENT KEY</div>
+                </div>
+              </div>
+
+              {/* Logic Gate Status */}
+              <div className="mt-8 bg-slate-900/80 px-6 py-3 rounded-lg border border-slate-700 backdrop-blur-sm">
+                <code className="text-xs text-cyan-300">
+                  TOFFOLI_GATE(Bank, Client) == {serverState}
+                </code>
+              </div>
+
+            </div>
+          </div>
+
+          {/* Live Telemetry */}
+          <div className="bg-slate-800/50 border border-slate-700 rounded-xl p-4">
+             <h4 className="text-xs font-bold text-slate-400 uppercase mb-3">Quantum Telemetry</h4>
+             <div className="space-y-3">
+               <div>
+                 <div className="flex justify-between text-xs mb-1">
+                   <span className="text-slate-400">Qubit Fidelity</span>
+                   <span className="text-green-400">1.00</span>
+                 </div>
+                 <div className="h-1 bg-slate-700 rounded-full overflow-hidden">
+                   <div className="h-full bg-green-500 w-full"></div>
+                 </div>
+               </div>
+               <div>
+                 <div className="flex justify-between text-xs mb-1">
+                   <span className="text-slate-400">Entanglement Strength</span>
+                   <span className="text-cyan-400">{entanglement}%</span>
+                 </div>
+                 <div className="h-1 bg-slate-700 rounded-full overflow-hidden">
+                   <div className="h-full bg-cyan-500 transition-all duration-1000" style={{width: `${entanglement}%`}}></div>
+                 </div>
+               </div>
+             </div>
+          </div>
+
+        </div>
+
+        {/* RIGHT COLUMN: CLIENT PORTAL */}
+        <div className="space-y-6">
+          <div className="bg-slate-800/50 border border-slate-700 rounded-xl p-6 relative overflow-hidden">
+             <div className="absolute top-0 right-0 w-1 h-full bg-purple-500"></div>
+             <h2 className="text-lg font-bold flex items-center justify-end space-x-2 mb-4 text-purple-400">
+              <span>CLIENT PORTAL</span>
+              <Users className="w-5 h-5" />
+            </h2>
+
+            <div className="space-y-4">
+               <div className="p-4 bg-slate-900 rounded-lg border border-slate-700 text-right">
+                <h3 className="text-sm font-semibold text-slate-400 mb-2">Contract Review</h3>
+                <p className="text-xs text-slate-500 leading-relaxed">
+                  "I agree to the terms of the loan issuance. By transmitting my quantum key, I acknowledge the debt obligation..."
+                </p>
+              </div>
+
+              <div className="flex justify-end">
+                 <div className={`px-3 py-1 rounded text-xs font-bold border ${phase === 'draft' ? 'border-yellow-500 text-yellow-500' : 'border-green-500 text-green-500'}`}>
+                    {phase === 'draft' ? 'WAITING FOR AGREEMENT' : 'CONTRACT LOCKED'}
+                 </div>
+              </div>
+
+              {phase !== 'draft' && !clientKeySent && (
+                <button 
+                  onClick={sendClientKey}
+                  className="w-full py-4 bg-purple-600 hover:bg-purple-500 rounded-lg text-sm font-bold transition-all shadow-[0_0_15px_rgba(168,85,247,0.4)] flex items-center justify-center space-x-2"
+                >
+                  <Key className="w-4 h-4" />
+                  <span>SIGN & TELEPORT KEY</span>
+                </button>
+              )}
+
+              {clientKeySent && (
+                <div className="w-full py-4 bg-slate-900/50 border border-green-500/30 text-green-400 rounded-lg text-sm font-bold flex items-center justify-center space-x-2">
+                  <CheckCircle className="w-4 h-4" />
+                  <span>KEY TELEPORTED</span>
+                </div>
+              )}
+
+            </div>
+          </div>
+        </div>
+
+      </main>
+      
+      {/* Finalization Modal / Overlay */}
+      {phase === 'finalized' && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center px-4 pointer-events-none">
+           <div className="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
+           <div className="bg-slate-900 border border-cyan-500 rounded-2xl p-8 max-w-md w-full shadow-[0_0_50px_rgba(6,182,212,0.3)] transform animate-in zoom-in duration-300 relative z-10 text-center pointer-events-auto">
+              <div className="w-16 h-16 bg-cyan-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                <FileText className="w-8 h-8 text-cyan-400" />
+              </div>
+              <h2 className="text-2xl font-bold text-white mb-2">CONTRACT GENERATED</h2>
+              <p className="text-slate-400 text-sm mb-6">
+                The Schrödinger's Server has collapsed to state |1⟩. 
+                The contract is now immutable and legally binding.
+              </p>
+              <div className="bg-black rounded p-4 font-mono text-xs text-left text-green-400 mb-6 overflow-hidden">
+                <div>HASH: 0x98a...1f4</div>
+                <div>TS: {new Date().toISOString()}</div>
+                <div>STATUS: IRREVERSIBLE</div>
+              </div>
+              <button onClick={resetProtocol} className="w-full py-3 bg-slate-700 hover:bg-slate-600 rounded-lg font-bold transition-colors">
+                Start New Contract
+              </button>
+           </div>
+        </div>
+      )}
+
+    </div>
+  );
+};
+
+export default QuantumNotaryDashboard;
