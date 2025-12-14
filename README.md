@@ -1,5 +1,5 @@
 
-This project is opensource and free for people to build off of and use.
+This project is opensource and free for people to build off of and use. I just ask for credit for the base 1.0 invention and proper citations. That is all.
 # Quantum Notary: A Time Bridge for Web3 Oracles
 
 ### An "Async Adapter" for Quantum-to-Blockchain Communication
